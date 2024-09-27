@@ -1,36 +1,49 @@
-import React, { useState } from "react";
-import InventoryForm from "./InventoryForm";
-import InventoryList from "./InventoryList";
-import Pagination from "./Pagination";
-import Dashboard from "./Dashboard";
-import InventoryTable from "./InventoryTable";
+// src/App.jsx
 
-const App = () => {
-  const [inventory, setInventory] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4; // Adjust to fit your needs
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import DashboardLayout from './components/DashboardLayout';
+import InventoryOverview from './components/InventoryOverview';
+import AddItemForm from './components/AddItemForm';
+import ManageInventory from './components/ManageInventory';
+import InventoryChart from './components/InventoryChart';
 
-  const addNewItem = (newItem) => {
-    setInventory([...inventory, newItem]);
+function App() {
+  // Sample inventory data
+  const [inventory, setInventory] = useState([
+    { name: 'Item A', quantity: 20 },
+    { name: 'Item B', quantity: 15 },
+    { name: 'Item C', quantity: 10 },
+  ]);
+
+  const addItem = (item) => {
+    setInventory([...inventory, item]);
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = inventory.slice(indexOfFirstItem, indexOfLastItem);
+  const deleteItem = (index) => {
+    const updatedInventory = inventory.filter((_, i) => i !== index);
+    setInventory(updatedInventory);
+  };
 
   return (
-    <div className="container mx-auto p-5">
-      <h1 className="text-4xl font-bold text-center mb-8"> Inventory Management</h1>
-      <InventoryForm addNewItem={addNewItem} />
-      <InventoryList items={currentItems} />
-      <Pagination
-        totalItems={inventory.length}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
-    </div>
+    <Router>
+      <DashboardLayout>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <InventoryOverview />
+                <InventoryChart inventory={inventory} /> {/* Pass the inventory data to the chart */}
+              </>
+            }
+          />
+          <Route path="/add" element={<AddItemForm addItem={addItem} />} />
+          <Route path="/manage" element={<ManageInventory inventory={inventory} deleteItem={deleteItem} />} />
+        </Routes>
+      </DashboardLayout>
+    </Router>
   );
-};
+}
 
 export default App;
