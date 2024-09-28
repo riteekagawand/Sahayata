@@ -1,99 +1,61 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import bg from '../assets/registerbg2.jpeg';
+import { FaLock } from 'react-icons/fa';
+import { MdMail } from 'react-icons/md';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const Login = ({ toggleForm }) => {
+  const [form, setForm] = useState({ email: '', password: '' });
 
-  const navigate = useNavigate();
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Reset error message
-    setError('');
-
-    // Simple validation
-    if (!email || !password) {
-      setError('Please fill in all fields.');
-      return;
-    }
-
-    // Mock API request (replace this with your actual API call)
-    try {
-      const response = await fetch('http://localhost:5000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Login failed. Please check your credentials.');
-      }
-
-      // Assuming a successful login redirects to a dashboard or home page
-      navigate('/dashboard'); // Change this to your desired route
-    } catch (error) {
-      setError(error.message);
-    }
+    console.log(form);
+    alert('Login Successful');
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen relative">
-      <img src={bg} className="max-h-screen w-full object-cover" alt="Background" />
-      <div className="absolute inset-0 bg-black opacity-65"></div> {/* Dark shadow */}
-      <div className="absolute p-6 rounded-lg shadow-lg w-full max-w-md z-10 bg-white "> {/* Form overlay */}
-        <h2 className="text-2xl font-bold  mb-4">Login</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block " htmlFor="email">
-              Email
-            </label>
+    <div className='flex items-center justify-center p-4'>
+      <div className='w-full max-w-md bg-white shadow-md rounded-lg p-6'>
+        <h2 className='text-2xl font-bold text-center mb-6'>LOGIN</h2>
+        <form className='space-y-4' onSubmit={handleSubmit}>
+          <div className='relative'>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder='Enter email address'
-              className="mt-1 block w-full p-2 rounded-md border border-gray-300 bg-blue-100 text-gray-800 focus:outline-none focus:ring focus:ring-blue-500"
+              className='w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              placeholder='Email'
+              type='email'
+              name='email'
+              value={form.email}
+              onChange={handleChange}
               required
             />
+            <MdMail className='absolute top-1/2 transform -translate-y-1/2 right-3 text-gray-400' />
           </div>
-          <div className="mb-4">
-            <label className="block " htmlFor="password">
-              Password
-            </label>
+          <div className='relative'>
             <input
-              type="password"
-              id="password"
-              value={password}
-              placeholder='Enter Your Password'
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full p-2 rounded-md border border-gray-300 bg-blue-100  focus:outline-none focus:ring focus:ring-blue-500"
+              className='w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              placeholder='Password'
+              type='password'
+              name='password'
+              value={form.password}
+              onChange={handleChange}
               required
             />
+            <FaLock className='absolute top-1/2 transform -translate-y-1/2 right-3 text-gray-400' />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-500 transition duration-200"
-          >
+          <button className='w-full bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700 focus:outline-none'>
             Login
           </button>
+          <div className='text-center mt-4'>
+            <span>
+              Don't have an account?{' '}
+              <span className='text-black font- cursor-pointer hover:underline' onClick={toggleForm}>
+                Register
+              </span>
+            </span>
+          </div>
         </form>
-        <div className="text-center mt-4">
-          <p className="">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-blue-400 underline">
-              Register here
-            </Link>
-          </p>
-        </div>
       </div>
     </div>
   );
