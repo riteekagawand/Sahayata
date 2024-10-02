@@ -1,4 +1,4 @@
-# Project : VCET HACKATHON 2024 🤝
+# Project : SAHAYAT 🤝
 
 
 ## Getting Started
